@@ -137,14 +137,6 @@ document.body.addEventListener("mousemove", (e) => {
     socket.emit("mousePosition-send2", mousePos);
   }
 });
-document.body.addEventListener("touchmove", (e) => {
-  var mousePos = (e.y / BODYRECT.height) * 100;
-  if (playernum == socket.id) {
-    socket.emit("mousePosition-send1", mousePos);
-  } else {
-    socket.emit("mousePosition-send2", mousePos);
-  }
-});
 
 function startGame() {
   btn.style.display = "none";
