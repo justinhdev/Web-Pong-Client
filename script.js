@@ -129,7 +129,7 @@ btn.addEventListener("click", () => {
   socket.emit("startGame-send");
 });
 
-document.body.addEventListener("mousemove", (e) => {
+document.body.addEventListener("mousemove" || "touchmove", (e) => {
   var mousePos = (e.y / BODYRECT.height) * 100;
   if (playernum == socket.id) {
     socket.emit("mousePosition-send1", mousePos);
