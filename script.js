@@ -226,12 +226,29 @@ function handleLose() {
   }
   socket.emit("missAudio");
   ball.reset();
-  if (playerScoreElem.textContent == 3 || computerScoreElem.textContent == 3) {
-    btn.style.display = "block";
-    btnmulti.style.display = "block";
-    startSingle = false;
-    startMulti = false;
-    gameOverAudio.play();
+  if (startSingle) {
+    if (
+      playerScoreElem.textContent == 3 ||
+      computerScoreElem.textContent == 3
+    ) {
+      btn.style.display = "block";
+      btnmulti.style.display = "block";
+      startSingle = false;
+      startMulti = false;
+      gameOverAudio.play();
+    }
+  }
+  else {
+    if (
+      playerScoreElem.textContent == 1 ||
+      computerScoreElem.textContent == 1
+    ) {
+      btn.style.display = "block";
+      btnmulti.style.display = "block";
+      startSingle = false;
+      startMulti = false;
+      gameOverAudio.play();
+    }
   }
 }
 
