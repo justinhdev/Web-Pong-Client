@@ -52,7 +52,7 @@ class Ball {
         this.direction.y *= -1;
         setTimeout(function () {
           timer = false;
-        }, 500);
+        }, 250);
       }
     }
 
@@ -65,7 +65,7 @@ class Ball {
         this.direction.x *= -1;
         setTimeout(function () {
           timer2 = false;
-        }, 1000);
+        }, 250);
       }
     }
   }
