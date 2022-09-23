@@ -38,6 +38,7 @@ class Ball {
     this.x = 50;
     this.y = 50;
     this.direction = { x: 0 };
+    console.log(heading);
     this.direction = { x: Math.cos(heading), y: Math.sin(heading) };
     this.velocity = INITIAL_VELOCITY;
   }
@@ -58,7 +59,6 @@ class Ball {
 
     if (timer2 == false) {
       if (paddleRects.some((r) => isCollision(r, rect))) {
-        console.log("hit");
         timer2 = true;
         socket.emit("hitAudio");
         hitAudio.load();
@@ -160,7 +160,6 @@ socket.on("ready-waiting", () => {
 });
 socket.on("roundOver-recieve", () => {
   startMulti = false;
-  ball.reset();
   btnrdy.style.display = "block";
 });
 
