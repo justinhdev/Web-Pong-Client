@@ -243,7 +243,7 @@ function handleLose() {
     computerScoreElem.textContent = parseInt(computerScoreElem.textContent) + 1;
   }
   socket.emit("missAudio");
-  ball.reset();
+ 
   if (startSingle) {
     if (
       playerScoreElem.textContent == 3 ||
@@ -254,6 +254,7 @@ function handleLose() {
       startSingle = false;
       startMulti = false;
       gameOverAudio.play();
+      ball.reset();
     }
   } else {
     if (
