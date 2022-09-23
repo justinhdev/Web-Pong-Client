@@ -3,7 +3,7 @@
 var socket = io("https://web-pong.herokuapp.com/");
 
 const INITIAL_VELOCITY = 0.025;
-const VELOCITY_INCREASE = 0.000005;
+const VELOCITY_INCREASE = 0.00001;
 const SPEED = 0.01;
 const BODYRECT = document.body.getBoundingClientRect();
 
@@ -46,17 +46,31 @@ class Ball {
     this.y += this.direction.y * this.velocity * delta;
     this.velocity += VELOCITY_INCREASE * delta;
     const rect = this.rect();
-    if (rect.bottom >= BODYRECT.bottom || rect.top <= BODYRECT.top) {
-      this.direction.y *= -1;
+    if (timer == false) {
+      if (rect.bottom >= BODYRECT.bottom || rect.top <= BODYRECT.top) {
+        timer = true;
+        this.direction.y *= -1;
+        setTimeout(function () {
+          timer = false;
+        }, 500);
+      }
     }
-    if (paddleRects.some((r) => isCollision(r, rect))) {
-      socket.emit("hitAudio");
-      hitAudio.load();
-      this.direction.x *= -1;
+
+    if (timer2 == false) {
+      if (paddleRects.some((r) => isCollision(r, rect))) {
+        timer2 = true;
+        socket.emit("hitAudio");
+        hitAudio.load();
+        this.direction.x *= -1;
+        setTimeout(function () {
+          timer2 = false;
+        }, 1000);
+      }
     }
   }
 }
-
+let timer = false;
+let timer2 = false;
 class Paddle {
   constructor(paddleElem) {
     this.paddleElem = paddleElem;
@@ -177,11 +191,13 @@ function multiStartGame() {
 var rect1 = playerPaddle.rect();
 var rect2 = computerPaddle.rect();
 let lastTime;
+const fps = 100;
 function update(time) {
   requestAnimationFrame(update);
   if (startSingle || startMulti == true) {
     if (lastTime != null) {
       delta = time - lastTime;
+      console.log(delta);
     }
     rect1 = playerPaddle.rect();
     rect2 = computerPaddle.rect();
@@ -189,7 +205,6 @@ function update(time) {
     if (startSingle == true) {
       computerPaddle.update(delta, ball.y);
     }
-
     if (isLose()) {
       handleLose();
     }
