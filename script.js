@@ -163,10 +163,6 @@ socket.on("roundOver-recieve", () => {
   ball.reset();
   btnrdy.style.display = "block";
 });
-socket.on("scores-recieve", (p1score, p2score) => {
-  playerScoreElem.textContent = p1score;
-  computerScoreElem.textContent = p1score;
-});
 
 btn.addEventListener("click", () => {
   singleStartGame();
@@ -237,20 +233,14 @@ function isLose() {
   const rect = ball.rect();
   return rect.right >= BODYRECT.right || rect.left <= BODYRECT.left;
 }
-var p1score;
-var p2score;
+
 function handleLose() {
   const rect = ball.rect();
   if (rect.right >= BODYRECT.right) {
-    //playerScoreElem.textContent = parseInt(playerScoreElem.textContent) + 1;
-    //socket.emit("score1", parseInt(playerScoreElem.textContent) + 1)
-    p1score = parseInt(playerScoreElem.textContent) + 1;
+    playerScoreElem.textContent = parseInt(playerScoreElem.textContent) + 1;
   } else {
-    p2score = parseInt(computerScoreElem.textContent) + 1;
-    //computerScoreElem.textContent = parseInt(computerScoreElem.textContent) + 1;
-    //socket.emit("score2", parseInt(computerScoreElem.textContent) + 1)
+    computerScoreElem.textContent = parseInt(computerScoreElem.textContent) + 1;
   }
-  socket.emit("scores-send", p1score, p2score);
   socket.emit("missAudio");
   ball.reset();
   if (startSingle) {
