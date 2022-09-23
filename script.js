@@ -58,6 +58,7 @@ class Ball {
 
     if (timer2 == false) {
       if (paddleRects.some((r) => isCollision(r, rect))) {
+        console.log("hit");
         timer2 = true;
         socket.emit("hitAudio");
         hitAudio.load();
@@ -197,7 +198,6 @@ function update(time) {
   if (startSingle || startMulti == true) {
     if (lastTime != null) {
       delta = time - lastTime;
-      console.log(delta);
     }
     rect1 = playerPaddle.rect();
     rect2 = computerPaddle.rect();
