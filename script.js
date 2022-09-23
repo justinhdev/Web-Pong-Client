@@ -159,9 +159,7 @@ socket.on("ready-waiting", () => {
   document.getElementById("btnrdy").innerHTML = "waiting on one!";
 });
 socket.on("roundOver-recieve", () => {
-  startMulti = false;
-  btnrdy.style.display = "block";
-  ball.reset();
+
 });
 
 btn.addEventListener("click", () => {
@@ -266,7 +264,10 @@ function handleLose() {
       gameOverAudio.play();
       btnrdy.style.display = "none";
     } else {
-      socket.emit("roundOver-send")
+      startMulti = false;
+      btnrdy.style.display = "block";
+      ball.reset();
+      //socket.emit("roundOver-send")
     }
   }
 }
