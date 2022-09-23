@@ -154,12 +154,15 @@ socket.on("ready-recieve", () => {
   btnrdy.style.display = "none";
   document.getElementById("btnrdy").innerHTML = "ready?";
   startMulti = true;
+  ball.reset();
 });
 socket.on("ready-waiting", () => {
   document.getElementById("btnrdy").innerHTML = "waiting on one!";
 });
 socket.on("roundOver-recieve", () => {
-
+  startMulti = false;
+  btnrdy.style.display = "block";
+  ball.reset();
 });
 
 btn.addEventListener("click", () => {
@@ -264,10 +267,7 @@ function handleLose() {
       gameOverAudio.play();
       btnrdy.style.display = "none";
     } else {
-      startMulti = false;
-      btnrdy.style.display = "block";
-      ball.reset();
-      //socket.emit("roundOver-send")
+      socket.emit("roundOver-send")
     }
   }
 }
