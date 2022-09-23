@@ -34,6 +34,7 @@ class Ball {
   }
 
   reset() {
+    socket.emit("getHeading");
     this.x = 50;
     this.y = 50;
     this.direction = { x: 0 };
@@ -170,7 +171,6 @@ document.body.addEventListener("mousemove", (e) => {
 });
 
 function singleStartGame() {
-  socket.emit("getHeading");
   ball.reset();
   btn.style.display = "none";
   btnmulti.style.display = "none";
@@ -180,7 +180,6 @@ function singleStartGame() {
   startAudio.play();
 }
 function multiStartGame() {
-  socket.emit("getHeading");
   ball.reset();
   btn.style.display = "none";
   btnmulti.style.display = "none";
@@ -207,7 +206,6 @@ function update(time) {
       computerPaddle.update(delta, ball.y);
     }
     if (isLose()) {
-      socket.emit("getHeading");
       handleLose();
     }
   }
