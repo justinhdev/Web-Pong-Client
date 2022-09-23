@@ -160,8 +160,6 @@ socket.on("ready-waiting", () => {
   document.getElementById("btnrdy").innerHTML = "waiting on one!";
 });
 socket.on("roundOver-recieve", (pscore, cscore) => {
-  playerScoreElem.textContent = pscore;
-  computerScoreElem.textContent = cscore;
   startMulti = false;
   btnrdy.style.display = "block";
   ball.reset();
@@ -273,7 +271,7 @@ function handleLose() {
       gameOverAudio.play();
       btnrdy.style.display = "none";
     } else {
-      socket.emit("roundOver-send", playerScoreElem.textContent, computerScoreElem.textContent)
+      socket.emit("roundOver-send")
     }
   }
 }
