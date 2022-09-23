@@ -151,6 +151,9 @@ button:hover:after {
   -webkit-animation: translateWobble 2.2s ease forwards;
   animation: translateWobble 2.2s ease forwards;
 }
+.btnrdy {
+  display: none;
+}
 
 @-webkit-keyframes rotateAngle {
   0% {

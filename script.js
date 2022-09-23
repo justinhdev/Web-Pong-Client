@@ -150,11 +150,23 @@ socket.on("hitAudio-send", () => {
 socket.on("missAudio-send", () => {
   missAudio.play();
 });
+socket.on("ready-recieve", () => {
+  btnrdy.style.display = "none";
+  document.getElementById("btnrdy").innerHTML = "ready?";
+  startMulti = true;
+});
+socket.on("ready-waiting", () => {
+  document.getElementById("btnrdy").innerHTML = "waiting on one!";
+});
+
 btn.addEventListener("click", () => {
   singleStartGame();
 });
 btnmulti.addEventListener("click", () => {
   socket.emit("startGame-send");
+});
+btnrdy.addEventListener("click", () => {
+  socket.emit("ready-send");
 });
 
 document.body.addEventListener("mousemove", (e) => {
@@ -237,17 +249,20 @@ function handleLose() {
       startMulti = false;
       gameOverAudio.play();
     }
-  }
-  else {
+  } else {
     if (
-      playerScoreElem.textContent == 1 ||
-      computerScoreElem.textContent == 1
+      playerScoreElem.textContent == 3 ||
+      computerScoreElem.textContent == 3
     ) {
       btn.style.display = "block";
       btnmulti.style.display = "block";
       startSingle = false;
       startMulti = false;
       gameOverAudio.play();
+      btnrdy.style.display = "none";
+    } else {
+      btnrdy.style.display = "block";
+      startMulti = false;
     }
   }
 }
