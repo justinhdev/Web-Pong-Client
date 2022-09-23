@@ -159,7 +159,9 @@ socket.on("ready-recieve", () => {
 socket.on("ready-waiting", () => {
   document.getElementById("btnrdy").innerHTML = "waiting on one!";
 });
-socket.on("roundOver-recieve", () => {
+socket.on("roundOver-recieve", (pscore, cscore) => {
+  playerScoreElem.textContent = pscore;
+  computerScoreElem.textContent = cscore;
   startMulti = false;
   btnrdy.style.display = "block";
   ball.reset();
@@ -235,6 +237,9 @@ function isLose() {
   return rect.right >= BODYRECT.right || rect.left <= BODYRECT.left;
 }
 
+
+
+
 function handleLose() {
   const rect = ball.rect();
   if (rect.right >= BODYRECT.right) {
@@ -268,7 +273,7 @@ function handleLose() {
       gameOverAudio.play();
       btnrdy.style.display = "none";
     } else {
-      socket.emit("roundOver-send")
+      socket.emit("roundOver-send", playerScoreElem.textContent, computerScoreElem.textContent)
     }
   }
 }
