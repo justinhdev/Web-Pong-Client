@@ -161,6 +161,7 @@ socket.on("ready-waiting", () => {
 socket.on("roundOver-recieve", () => {
   startMulti = false;
   btnrdy.style.display = "block";
+  ball.reset();
 });
 
 btn.addEventListener("click", () => {
