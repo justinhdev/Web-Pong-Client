@@ -15,16 +15,19 @@ html {
 body {
   
   background-color: var(--background-color);
+  background-image: url(background.svg);
+  background-repeat: none;
   overflow: hidden;
   position: absolute;
   height: 940px;
   width: 1200px;
+  border-radius: 25px;
 }
 
 .paddle {
+  border-radius: 5px;
   --position: 50;
   position: absolute;
-  background-color: var(--foreground-color);
   top: calc(var(--position) * 9.4px);
   transform: translateY(-50%);
   width: 30px;
@@ -32,10 +35,12 @@ body {
 }
 
 .paddle.left {
+  background-color: #009473;
   left: 10px;
 }
 
 .paddle.right {
+  background-color: #005686;
   right: 10px;
 }
 
@@ -43,7 +48,7 @@ body {
   --x: 50;
   --y: 50;
   position: absolute;
-  background-color: var(--foreground-color);
+  background-color: #ffffff;
   left: calc(var(--x) * 12px);
   top: calc(var(--y) * 9.4px);
   border-radius: 50%;
@@ -53,11 +58,12 @@ body {
 }
 
 .score {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   display: flex;
   justify-content: center;
   font-weight: bold;
   font-size: 7vh;
-  color: var(--foreground-color);
+  color: #ffffff;
 }
 
 .score > * {
@@ -65,12 +71,11 @@ body {
   flex-basis: 0;
   padding: 0 2vh;
   margin: 1vh 0;
-  opacity: 0.5;
 }
 
 .score > :first-child {
   text-align: right;
-  border-right: 0.5vh solid var(--foreground-color);
+  border-right: 0.5vh solid var(--foreground-color)
 }
 
 main {
@@ -94,12 +99,13 @@ button {
   border-radius: 0.4em;
   text-transform: uppercase;
   font-size: 2vw;
-  font-family: "Work Sans", sans-serif;
+  font-family: 'Trebuchet MS';
   font-weight: 500;
   letter-spacing: 0.04em;
   mix-blend-mode: color-dodge;
   perspective: 500px;
   transform-style: preserve-3d;
+  box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.2);
 }
 button:before,
 button:after {

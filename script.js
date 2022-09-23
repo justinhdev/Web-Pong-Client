@@ -1,7 +1,6 @@
 //const socket = io("http://localhost:3000");
 
-var socket = io('https://web-pong.herokuapp.com/');
-
+var socket = io("https://web-pong.herokuapp.com/");
 
 const INITIAL_VELOCITY = 0.025;
 const VELOCITY_INCREASE = 0.00001;
@@ -35,16 +34,12 @@ class Ball {
   }
 
   reset() {
-    var heading;
     socket.emit("getHeading");
-    socket.on("getHeading-send", (head) => {
-      heading = head;
-      this.x = 50;
-      this.y = 50;
-      this.direction = { x: 0 };
-      this.direction = { x: Math.cos(heading), y: Math.sin(heading) };
-      this.velocity = INITIAL_VELOCITY;
-    });
+    this.x = 50;
+    this.y = 50;
+    this.direction = { x: 0 };
+    this.direction = { x: Math.cos(heading), y: Math.sin(heading) };
+    this.velocity = INITIAL_VELOCITY;
   }
   update(delta, paddleRects) {
     this.x += this.direction.x * this.velocity * delta;
@@ -55,8 +50,9 @@ class Ball {
       this.direction.y *= -1;
     }
     if (paddleRects.some((r) => isCollision(r, rect))) {
+      socket.emit("hitAudio");
+      hitAudio.load();
       this.direction.x *= -1;
-      collisionTimeLag();
     }
   }
 }
@@ -89,85 +85,113 @@ class Paddle {
     this.position += SPEED * delta * (ballHeight - this.position);
   }
 }
+
 const ball = new Ball(document.getElementById("ball"));
 const playerPaddle = new Paddle(document.getElementById("player-paddle"));
 const computerPaddle = new Paddle(document.getElementById("computer-paddle"));
 const playerScoreElem = document.getElementById("player-score");
 const computerScoreElem = document.getElementById("computer-score");
 
-var start = false;
-var newRect;
+const startAudio = new Audio();
+const hitAudio = new Audio();
+const missAudio = new Audio();
+const gameOverAudio = new Audio();
+
+startAudio.src = "start.wav";
+hitAudio.src = "hit.wav";
+missAudio.src = "miss.wav";
+gameOverAudio.src = "gameover.wav";
+
+var startSingle = false;
+var startMulti = false;
 var delta;
 var playernum;
-var index = 0;
+var heading;
 
 socket.on("getIndex", (index) => {
   playernum = index[0];
 });
+socket.on("getHeading-send", (head) => {
+  heading = head;
+});
 socket.on("startGame-recieve", () => {
-  socket.emit("getHeading");
-  startGame();
+  startSingle = false;
+  multiStartGame();
 });
 socket.on("mousePosition-recieve1", (mousePos) => {
   playerPaddle.position = mousePos;
 });
 socket.on("mousePosition-recieve2", (mousePos) => {
-  computerPaddle.position = mousePos;
+  if (startSingle != true) {
+    computerPaddle.position = mousePos;
+  } else {
+    playerPaddle.position = mousePos;
+  }
 });
-socket.on("ballUpdate-recieve", (rect) => {
-  newRect = rect;
+socket.on("hitAudio-send", () => {
+  console.log("hit");
+  hitAudio.play();
 });
-
-socket.on("delta-recieve", (deltaSend) => {
-  delta = deltaSend;
+socket.on("missAudio-send", () => {
+  missAudio.play();
 });
-socket.on("gameOver-recieve", () => {
-  handleLose();
-});
-
 btn.addEventListener("click", () => {
+  singleStartGame();
+});
+btnmulti.addEventListener("click", () => {
   socket.emit("startGame-send");
 });
 
 document.body.addEventListener("mousemove", (e) => {
   var mousePos = (e.y / BODYRECT.height) * 100;
-  if (playernum == socket.id) {
-    socket.emit("mousePosition-send1", mousePos);
+  if (startSingle == true) {
+    playerPaddle.position = mousePos;
   } else {
-    socket.emit("mousePosition-send2", mousePos);
+    if (playernum == socket.id) {
+      socket.emit("mousePosition-send1", mousePos);
+    } else {
+      socket.emit("mousePosition-send2", mousePos);
+    }
   }
 });
 
-function startGame() {
+function singleStartGame() {
+  ball.reset();
   btn.style.display = "none";
   btnmulti.style.display = "none";
-  start = true;
-  ball.reset();
+  startSingle = true;
   playerScoreElem.textContent = 0;
   computerScoreElem.textContent = 0;
+  startAudio.play();
+}
+function multiStartGame() {
+  ball.reset();
+  btn.style.display = "none";
+  btnmulti.style.display = "none";
+  startMulti = true;
+  playerScoreElem.textContent = 0;
+  computerScoreElem.textContent = 0;
+  startAudio.play();
 }
 
+var rect1 = playerPaddle.rect();
+var rect2 = computerPaddle.rect();
 let lastTime;
 function update(time) {
   requestAnimationFrame(update);
-  if (lastTime != null) {
-    if (playernum == socket.id) {
-      const deltaSend = time - lastTime;
-      socket.emit("delta-send", deltaSend);
+  if (startSingle || startMulti == true) {
+    if (lastTime != null) {
+      delta = time - lastTime;
     }
-    var rect1 = playerPaddle.rect();
-    var rect2 = computerPaddle.rect();
-    if (playernum == socket.id) {
-      rect1 = playerPaddle.rect();
-    } else {
-      rect2 = computerPaddle.rect();
+    rect1 = playerPaddle.rect();
+    rect2 = computerPaddle.rect();
+    ball.update(delta, [rect1, rect2]);
+    if (startSingle == true) {
+      computerPaddle.update(delta, ball.y);
     }
-    if (start == true) {
-      socket.emit("ballUpdate-send", [rect1, rect2]);
-      ball.update(delta, newRect);
-    }
+
     if (isLose()) {
-      socket.emit("gameOver-send");
+      handleLose();
     }
   }
   lastTime = time;
@@ -185,11 +209,14 @@ function handleLose() {
   } else {
     computerScoreElem.textContent = parseInt(computerScoreElem.textContent) + 1;
   }
-
+  socket.emit("missAudio");
   ball.reset();
-  if (playerScoreElem.textContent == 2 || computerScoreElem.textContent == 2) {
+  if (playerScoreElem.textContent == 3 || computerScoreElem.textContent == 3) {
     btn.style.display = "block";
-    start = false;
+    btnmulti.style.display = "block";
+    startSingle = false;
+    startMulti = false;
+    gameOverAudio.play();
   }
 }
 
@@ -206,10 +233,4 @@ function isCollision(rect1, rect2) {
   );
 }
 
-function collisionTimeLag() {
-  var activated = false;
-  setTimeout(() => {
-    activated = true;
-  }, 1000);
-}
 update();
