@@ -2,7 +2,7 @@
 
 var socket = io("https://web-pong.herokuapp.com/");
 
-const INITIAL_VELOCITY = 0.025;
+const INITIAL_VELOCITY = 0.04;
 const VELOCITY_INCREASE = 0.00001;
 const SPEED = 0.01;
 const BODYRECT = document.body.getBoundingClientRect();
