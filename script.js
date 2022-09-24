@@ -178,6 +178,7 @@ btnrdy.addEventListener("click", () => {
 });
 
 document.body.addEventListener("mousemove", (e) => {
+  console.log("test");
   var mousePos = (e.y / BODYRECT.height) * 100;
   if (startSingle == true) {
     playerPaddle.position = mousePos;
@@ -189,6 +190,20 @@ document.body.addEventListener("mousemove", (e) => {
     }
   }
 });
+
+document.body.addEventListener("touchmove", (e) => {
+  var mousePos = (e.touches[0].clientY / BODYRECT.height) * 100;
+  if (startSingle == true) {
+    playerPaddle.position = mousePos;
+  } else {
+    if (playernum == socket.id) {
+      socket.emit("mousePosition-send1", mousePos);
+    } else {
+      socket.emit("mousePosition-send2", mousePos);
+    }
+  }
+});
+
 
 function singleStartGame() {
   ball.reset();

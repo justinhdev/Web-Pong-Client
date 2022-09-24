@@ -322,3 +322,50 @@ button:hover:after {
     );
   }
 } /*# sourceMappingURL=styles.css.map */
+
+@media only screen and (max-width: 600px) {
+  body {
+    height: 500px;
+    width: 350px;
+    background-image: none;
+    background-color: #200548;
+    touch-action: none;
+  }
+
+  .paddle {
+    border-radius: 5px;
+    --position: 50;
+    position: absolute;
+    top: calc(var(--position) * 5px);
+    transform: translateY(-50%);
+    width: 20px;
+    height: 100px;
+  }
+  
+  .paddle.left {
+    background-color: #009473;
+    left: 10px;
+  }
+  
+  .paddle.right {
+    background-color: #005686;
+    right: 10px;
+  }
+  
+  .ball {
+    --x: 50;
+    --y: 50;
+    position: absolute;
+    background-color: #ffffff;
+    left: calc(var(--x) * 3.5px);
+    top: calc(var(--y) * 5px);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+  }
+  button {
+    height: 40px;
+    font-size: 30px;
+  }
+}
