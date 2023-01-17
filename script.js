@@ -1,6 +1,6 @@
 //const socket = io("http://localhost:3000");
 
-var socket = io("https://pong-server-64rt.onrender.com/");
+var socket = io("https://pong-server-yj9i.onrender.com/");
 
 const INITIAL_VELOCITY = 0.04;
 const VELOCITY_INCREASE = 0.00001;
