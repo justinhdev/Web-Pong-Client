@@ -178,7 +178,6 @@ btnrdy.addEventListener("click", () => {
 });
 
 document.body.addEventListener("mousemove", (e) => {
-  console.log("test");
   var mousePos = (e.y / BODYRECT.height) * 100;
   if (startSingle == true) {
     playerPaddle.position = mousePos;
