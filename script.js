@@ -1,4 +1,4 @@
-/*const socket = io("http://localhost:3000");*/
+//const socket = io("http://localhost:3000");
 
 var socket = io("https://pong-server-64rt.onrender.com/");
 
